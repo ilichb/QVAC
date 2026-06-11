@@ -1,0 +1,10 @@
+{
+  "name": "qvac-hackathon-dim",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@qvac/sdk": "^0.12.2",
+    "tweetnacl": "^1.0.3",
+    "ws": "^8.21.0"
+  }
+}
