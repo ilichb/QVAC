@@ -1,0 +1,13 @@
+{
+    "name": "qvac-android",
+    "version": "0.2.0",
+    "type": "module",
+    "description": "DIM Protocol - Android Immune Node",
+    "scripts": {
+        "start": "node android_gui_server.js"
+    },
+    "dependencies": {
+        "tweetnacl": "^1.0.3",
+        "ws": "^8.21.0"
+    }
+}
