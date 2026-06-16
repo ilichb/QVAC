@@ -266,6 +266,8 @@ sequenceDiagram
 
 ## 🚀 Installation & Reproduction
 
+> **No IP configuration needed.** Nodes discover each other automatically via UDP broadcast.
+
 ### 💻 On PC (Linux)
 
 ```bash
@@ -276,18 +278,18 @@ cd QVAC
 # 2. Install dependencies
 npm install
 
-# 3. Generate Ed25519 keys (optional, auto-generated on first run)
+# 3. (Optional) Generate Ed25519 keys — auto-generated on first run
 node gen_keys_nacl.js
 
 # 4. Download the LLM model (Qwen 2.5 1.5B Instruct GGUF)
-#    Download from Hugging Face and place it in ./models/
 mkdir -p models
-#   wget -O models/qwen2.5-1.5b-instruct.gguf <MODEL_URL>
+# wget -O models/qwen2.5-1.5b-instruct.gguf <MODEL_URL>
 
-# 5. Start the P2P server (listens on port 8080)
-node p2p_server_pc.js
+# 5. Launch the web GUI (auto-discovers Android)
+node gui_pc.js
+# → Open http://localhost:3000
 
-# 6. In another terminal: run Patient Zero (detection + signing)
+# Or run Patient Zero directly (CLI mode):
 node pc_patient_zero.js
 ```
 
@@ -308,13 +310,11 @@ cd QVAC
 # 4. Install dependencies
 npm install
 
-# 5. Connect to the PC's P2P server
-#    Edit client_android.js with your PC's IP address
-nano client_android.js
-#    Change '192.168.1.8' to your PC's IP
-
-# 6. Run the Android client
-node client_android.js
+# 5. Start the unified immune server (NO manual IP configuration)
+node android_immune_server.js
+# → Listens on the first available port in 8080-8089
+# → Broadcasts UDP presence so the PC finds it automatically
+# → Exposes WebSocket (antibody reception) + HTTP (status/test-threat)
 ```
 
 ---
@@ -323,75 +323,74 @@ node client_android.js
 
 ### Scenario: Detection and Blocking of a Drainer
 
-#### Step 1: Start the P2P Mesh
+> **PC and Android must be on the same LAN (WiFi router).  
+> No IP configuration required — nodes discover each other via UDP broadcast.**
 
-**On PC (server):**
+#### Step 1: Start the Immune Server on Android (Termux)
+
 ```bash
-$ node p2p_server_pc.js
-PC server listening on port 8080
+$ node android_immune_server.js
+[server] ✅ Servidor inmune Android escuchando en http://0.0.0.0:8080
+[server]    WebSocket: ws://0.0.0.0:8080
+[server]    HTTP: GET /status  |  POST /test-threat
+[discovery] Broadcast UDP iniciado en puerto 47808 (anunciando WS:8080)
 ```
 
-**On Android (client):**
-```bash
-$ node client_android.js
-Connected to PC
-```
+> If port 8080 is busy, the server automatically tries 8081, 8082… up to 8089.
 
-#### Step 2: Patient Zero Detects the Threat
+#### Step 2: Patient Zero Detects the Threat (PC)
 
 ```bash
 $ node pc_patient_zero.js
-Loading model...
-Progress: 45%
-Progress: 100%
-Model loaded, evaluating contract...
-Inference: {
-  threat_type: "Unlimited Approval Drainer",
-  confidence: 0.99,
-  reasoning: "approve function with amount = 2**256-1 detected"
-}
-New keypair generated.
-Connecting to Android to send antibody...
-Sending immune payload...
+
+🚀 DIM Protocol — Patient Zero
+
+1️⃣  Cargando modelo…
+   Progreso: 100%
+✅ Modelo cargado. Evaluando contrato…
+
+2️⃣  Inferencia: { threat_type: 'Unlimited Approval Drainer', confidence: 0.99, ... }
+3️⃣  Anticuerpo firmado: 201 bytes total, JSON 97 bytes
+4️⃣  Buscando nodo Android en la red local (hasta 10 s)…
+[discovery] Nodo DIM encontrado: 192.168.1.X:8080
+📡 Conectando a ws://192.168.1.X:8080 …
+5️⃣  Enviando payload inmune…
+✅ ACK del nodo Android. Anticuerpos en su memoria: 1
 ```
 
-#### Step 3: Android Receives the Antibody
+#### Step 3: Android Confirms Receipt
 
 ```bash
-$ node p2p_android_sim.js
-Simulated Android node listening on 192.168.1.50:8080
-Client connected
-Received buffer of 145 bytes
-Timestamp: 2025-06-10T22:30:00.000Z
-JSON raw: {"threat_type":"Unlimited Approval Drainer","confidence":0.99,"reasoning":"approve function with amount = 2**256-1 detected"}
-✅ Valid JSON: { threat_type: 'Unlimited Approval Drainer', confidence: 0.99, reasoning: 'approve function with amount = 2**256-1 detected' }
-Threat type: Unlimited Approval Drainer
+# (Termux output, continued)
+[ws] PC conectada desde 192.168.1.Y
+[ws] Recibido buffer: 201 bytes
+[ws] Timestamp: 2025-06-10T22:30:00.000Z
+[ws] Firma Ed25519: ✅ válida
+[ws] ✅ Anticuerpo almacenado. Total en memoria: 1
 ```
 
-#### Step 4: Participatory Demo (Blocking Simulation)
+#### Step 4: Participatory Demo — Blocking Simulation
 
 ```bash
+# On Android (Termux) or PC:
 $ node demo_participativa.js "0x742d35Cc6634C0532925a3b844Bc9e7595f90b0a approve unlimited"
-📲 Scanned: 0x742d35Cc6634C0532925a3b844Bc9e7595f90b0a approve unlimited
-🛡️ Threat neutralized by collective immunity (Offline)
-✅ Transaction blocked. Funds safe.
+
+📲 Texto escaneado: 0x742d35Cc6634C0532925a3b844Bc9e7595f90b0a approve unlimited
+📂 Memoria inmune cargada: 1 anticuerpo(s)
+
+🛡️  AMENAZA NEUTRALIZADA POR INMUNIDAD COLECTIVA (offline)
+✅ Transacción bloqueada. Fondos a salvo.
 ```
 
-#### Step 5: Verify the Immune Memory
+#### Step 5: Web GUI (optional)
 
 ```bash
-$ cat immune_memory.json
-[
-  {
-    "threat_type": "Unlimited Approval Drainer",
-    "confidence": 0.99,
-    "reasoning": "approve function with amount = 2**256-1 detected",
-    "timestamp": 1718062200000,
-    "signature": "<64_bytes_hex>",
-    "publicKey": "<32_bytes_hex>"
-  }
-]
+$ node gui_pc.js
+🖥️  GUI DIM Protocol → http://localhost:3000
+📡 Nodo Android pre-descubierto: 192.168.1.X:8080
 ```
+
+Open `http://localhost:3000` — click **Detect & broadcast threat** to run the full flow.
 
 ---
 
@@ -481,38 +480,38 @@ $ cat immune_memory.json
 
 ```
 QVAC/
-├── 📜 README.md                  # This file
-├── 📦 package.json               # Dependencies: @qvac/sdk, tweetnacl, ws
-├── ⚙️ config.demo.json           # P2P mesh configuration
+├── 📜 README.md                    # This file
+├── 📦 package.json                 # Dependencies: @qvac/sdk, tweetnacl, ws, express, axios
+├── ⚙️ config.demo.json             # Discovery configuration (no hardcoded IPs)
 │
-├── 🧬 server_antibody_nacl.js    # Server that generates & sends signed antibodies
-├── 🧬 server_antibody.js         # Legacy antibody server
+├── 🔍 discovery.js                 # UDP auto-discovery: no manual IP config needed
 │
-├── 🖥️ pc_patient_zero.js         # PATIENT ZERO: PC with local LLM + Ed25519 signing
-├── 🖥️ p2p_server_pc.js           # P2P server for PC (listens on port 8080)
+├── 🖥️ pc_patient_zero.js           # PATIENT ZERO: local LLM inference + Ed25519 sign + P2P send
+├── 🖥️ gui_pc.js                    # Web GUI server (Express, port 3000)
+├── 🖥️ p2p_server_pc.js             # Lightweight P2P server (alternative)
 │
-├── 📱 client_android.js          # Basic Android client (connects to PC)
-├── 📱 p2p_android_sim.js         # Simulated Android node with antibody parsing
+├── 📱 android_immune_server.js     # MAIN Android server: HTTP+WS unified, port retry, UDP broadcast
+├── 📱 p2p_android_sim.js           # Android node simulation (same code, runs on PC)
+├── 📱 client_android.js            # Basic Android client with auto-discovery
 │
-├── 🔗 p2p_client.js              # Generic P2P client with native Ed25519 signing
+├── 🔗 p2p_client.js                # Generic P2P client with auto-discovery
+├── 🧬 server_antibody_nacl.js      # Standalone antibody broadcaster (testing)
 │
-├── 🧪 inference_test.js          # Local inference test with QVAC SDK
-├── 🧪 demo_participativa.js      # Blocking demo with immune memory
+├── 🧪 inference_test.js            # Local LLM inference test
+├── 🧪 demo_participativa.js        # QR scan + offline blocking demo
 │
-├── 🔑 gen_keys_nacl.js           # Ed25519 key generator (tweetnacl)
-├── 🔑 gen_keys.js                # Legacy key generator
-├── 🔑 gen_keys_nacl.mjs          # ESM version of key generator
+├── 🔑 gen_keys_nacl.js             # Ed25519 key generator (tweetnacl, ESM)
+├── 🔑 gen_keys_nacl.mjs            # ESM version
+├── 🔑 gen_keys.js                  # Legacy key generator
 │
-├── 🔐 node_priv.key              # Ed25519 private key (64 bytes)
-├── 🔐 node_pub.key               # Ed25519 public key (32 bytes)
-├── 🔐 node_priv.der              # Private key in DER format
-├── 🔐 node_priv.pem              # Private key in PEM format
-├── 🔐 node_pub.der               # Public key in DER format
+├── 🔐 node_priv.key                # Ed25519 private key (64 bytes, gitignored)
+├── 🔐 node_pub.key                 # Ed25519 public key (32 bytes)
 │
-├── 🧠 models/
-│   └── qwen2.5-1.5b-instruct.gguf  # Local LLM model (Qwen 2.5 1.5B)
+├── 🌐 public/
+│   └── index.html                  # Web dashboard (auto-discovers Android node)
 │
-└── 📂 fs/                        # Filesystem files (if applicable)
+└── 🧠 models/
+    └── qwen2.5-1.5b-instruct.gguf  # Local LLM model (Qwen 2.5 1.5B, gitignored)
 ```
 
 ---
@@ -553,6 +552,7 @@ QVAC/
 | 🏆 QVAC Hackathon | [https://qvac.dev](https://qvac.dev) |
 | 📱 Termux | [https://termux.dev](https://termux.dev) |
 | 🐙 Repository | [https://github.com/ilichb/QVAC](https://github.com/ilichb/QVAC) |
+| 📄 White Paper | [https://dev.andromedacomputer.net/qvac-viewer.html](https://dev.andromedacomputer.net/qvac-viewer.html) |
 
 ---
 
