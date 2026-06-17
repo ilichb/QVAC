@@ -317,6 +317,38 @@ node android_immune_server.js
 # → Exposes WebSocket (antibody reception) + HTTP (status/test-threat)
 ```
 
+### 🖥️ Android GUI Dashboard (Touch Interface)
+
+For a touch-friendly dashboard on your Android device:
+
+```bash
+# Start the GUI server (separate terminal or after stopping immune server)
+node android_gui_server.js
+```
+
+```
+   DIM Protocol - Android GUI
+   Abre en tu Android:
+   http://localhost:5000
+```
+
+> **⚠️ IMPORTANT:** `localhost` does NOT work on Android browsers (Chrome/Firefox resolve it as IPv6 `::1`, causing an infinite loading loop).
+>
+> **Use your Android's WiFi IP address instead:**
+>
+> 1. Get your Android's IP address:
+>    - Go to **Settings → WiFi → Tap your network → Advanced → IP address**
+>    - Or run in Termux: `ip route get 1 | awk '{print $7}'` (if `ip` command is available)
+>    - Or install: `pkg install iproute2 && ip route get 1 | awk '{print $7}'`
+>
+> 2. Open your browser and navigate to:
+>    ```
+>    http://<YOUR_ANDROID_IP>:5000
+>    ```
+>    **Example:** `http://192.168.1.50:5000`
+>
+> 3. Tap **"Iniciar servidor inmune"** to activate the immune node (port 8080)
+
 ---
 
 ## 🎬 Step-by-Step Demo
