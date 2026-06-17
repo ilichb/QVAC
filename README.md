@@ -2,7 +2,7 @@
 
 > **Offline collective immunity against Unlimited Approval Drainers on Solana**
 
-[![QVAC Hackathon](https://img.shields.io/badge/QVAC-Hackathon%202025-7B3FE4?style=for-the-badge&logo=solana&logoColor=white)](https://qvac.dev)
+[![QVAC Hackathon](https://img.shields.io/badge/QVAC-Hackathon%202026-7B3FE4?style=for-the-badge&logo=solana&logoColor=white)](https://qvac.dev)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue?style=for-the-badge)](LICENSE)
 [![Node](https://img.shields.io/badge/Node.js-18%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![Android](https://img.shields.io/badge/Android-Termux-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://termux.dev)
@@ -364,7 +364,7 @@ $ node pc_patient_zero.js
 # (Termux output, continued)
 [ws] PC conectada desde 192.168.1.Y
 [ws] Recibido buffer: 201 bytes
-[ws] Timestamp: 2025-06-10T22:30:00.000Z
+[ws] Timestamp: 2026-06-10T22:30:00.000Z
 [ws] Firma Ed25519: ✅ válida
 [ws] ✅ Anticuerpo almacenado. Total en memoria: 1
 ```
@@ -438,7 +438,7 @@ Open `http://localhost:3000` — click **Detect & broadcast threat** to run the 
 │  │ 🛡️ ANTIBODY RECEIVED                           │    │
 │  ├─────────────────────────────────────────────────┤    │
 │  │ Signature: ✅ Ed25519 valid                     │    │
-│  │ Timestamp: 2025-06-10T22:30:00.000Z             │    │
+│  │ Timestamp: 2026-06-10T22:30:00.000Z             │    │
 │  │ Threat:    Unlimited Approval Drainer           │    │
 │  │ Confidence: 99%                                 │    │
 │  │ Status:    🛡️ PROTECTED                         │    │
@@ -614,7 +614,7 @@ Ideas to improve DIM Protocol? Contributions are welcome!
 ## 📄 License
 
 ```
-Copyright 2025 Ilich B.
+Copyright 2026 Ilich B.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -661,7 +661,7 @@ Give it a star on [GitHub](https://github.com/ilichb/QVAC) and share it with fel
 
 <div align="center">
 
-**Built with 🛡️ for the QVAC Hackathon 2025**
+**Built with 🛡️ for the QVAC Hackathon 2026**
 
 *Collective immunity. No cloud. No permission.*
 
