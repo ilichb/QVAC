@@ -573,6 +573,22 @@ QVAC/
 
 ---
 
+## 📡 API Reference
+
+For detailed API documentation covering:
+- **UDP Discovery** — Node discovery protocol (port 47808)
+- **WebSocket Payload** — Antibody binary transfer format (Ed25519 signed)
+- **HTTP Endpoints** — Android immune node (`/status`, `/test-threat`)
+- **PC Dashboard** — `gui_pc.js` endpoints (`/detect`, `/android/status`, `/android/test-threat`)
+- **Android GUI** — `android_gui_server.js` endpoints (`/api/start`, `/api/stop`, `/api/memory`, `/api/check-threat`)
+- **Error Codes** — All possible error responses
+- **Data Formats** — Key format, timestamp encoding, immune memory file structure
+- **Port Summary** — Complete port mapping across all services
+
+See [API.md](API.md).
+
+---
+
 ## 🔗 Links
 
 | Resource | Link |
