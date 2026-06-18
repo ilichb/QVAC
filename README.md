@@ -603,6 +603,7 @@ See [API.md](API.md).
 | 📱 Termux | [https://termux.dev](https://termux.dev) |
 | 🐙 Repository | [https://github.com/ilichb/QVAC](https://github.com/ilichb/QVAC) |
 | 📄 White Paper | [https://dev.andromedacomputer.net/qvac-viewer.html](https://dev.andromedacomputer.net/qvac-viewer.html) |
+| 🎬 Demo Video | [https://youtu.be/9YcBIYLc2zQ](https://youtu.be/9YcBIYLc2zQ) |
 
 ---
 

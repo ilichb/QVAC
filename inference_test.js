@@ -1,3 +1,12 @@
+/**
+ * inference_test.js — Local LLM inference test
+ *
+ * Verifies that the Qwen 2.5 1.5B Instruct model loads correctly
+ * and can classify an Unlimited Approval Drainer.
+ *
+ * Usage: node inference_test.js
+ */
+
 import { loadModel, completion, unloadModel } from '@qvac/sdk';
 import { resolve } from 'path';
 
@@ -6,45 +15,51 @@ const modelPath = resolve('./models/qwen2.5-1.5b-instruct.gguf');
 async function main() {
   let modelId = null;
   try {
-    console.log('Cargando modelo local:', modelPath);
+    console.log('Loading local model:', modelPath);
     modelId = await loadModel({
       modelSrc: modelPath,
       modelType: 'llm',
-      onProgress: (p) => console.log(`Progreso: ${Math.round(p.progress * 100)}%`)
+      onProgress: (p) => console.log(`Progress: ${Math.round(p.progress * 100)}%`)
     });
-    console.log('Modelo cargado, ID:', modelId);
+    console.log('Model loaded, ID:', modelId);
 
     const history = [
-      { role: "system", content: `Eres un analista de seguridad de smart contracts. Tu tarea es clasificar si un contrato es un "Unlimited Approval Drainer" (drenador de aprobación ilimitada) o no. Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional, sin markdown, sin explicaciones. El JSON debe tener exactamente estos campos:
+      {
+        role: "system",
+        content: `You are a Solana smart contract security analyst. Your task is to classify whether a contract is an "Unlimited Approval Drainer" or not. Respond ONLY with a valid JSON object, no extra text, no markdown, no explanations. The JSON must have exactly these fields:
 {
-  "threat_type": "Unlimited Approval Drainer" o "Safe",
-  "confidence": número entre 0 y 1,
-  "reasoning": "breve explicación"
-}` },
-      { role: "user", content: "Contrato: 0x123... función approve(address spender, uint256 amount) con amount = 2**256 - 1" }
+  "threat_type": "Unlimited Approval Drainer" or "Safe",
+  "confidence": number between 0 and 1,
+  "reasoning": "brief explanation"
+}`
+      },
+      {
+        role: "user",
+        content: "Contract: 0x123... function approve(address spender, uint256 amount) with amount = 2**256 - 1"
+      }
     ];
-    
+
     const result = completion({ modelId, history, stream: false });
     let response = await result.text;
-    console.log('Respuesta cruda:', response);
-    
-    // Limpiar markdown
+    console.log('Raw response:', response);
+
+    // Clean markdown code blocks
     let cleaned = response.replace(/```json\s*|\s*```/g, '');
-    // Extraer JSON
+    // Extract JSON
     const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       try {
         const parsed = JSON.parse(jsonMatch[0]);
-        console.log('JSON parseado:', parsed);
-      } catch(e) {
-        console.log('JSON inválido, aplicando regex fallback');
+        console.log('Parsed JSON:', parsed);
+      } catch (e) {
+        console.log('Invalid JSON, applying regex fallback');
         const isThreat = /UNLIMITED_APPROVAL|DRAINER/i.test(response);
-        console.log('Threat detectado por regex:', isThreat);
+        console.log('Threat detected by regex:', isThreat);
       }
     } else {
-      console.log('No se encontró JSON, regex fallback');
+      console.log('No JSON found, regex fallback');
       const isThreat = /UNLIMITED_APPROVAL|DRAINER/i.test(response);
-      console.log('Threat detectado por regex:', isThreat);
+      console.log('Threat detected by regex:', isThreat);
     }
   } catch (err) {
     console.error('Error:', err);
