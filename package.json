@@ -1,9 +1,23 @@
 {
   "name": "qvac-hackathon-dim",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
+  "scripts": {
+    "start:android": "node android_immune_server.js",
+    "start:android:gui": "node android_gui_server.js",
+    "start:pc": "node pc_patient_zero.js",
+    "start:gui": "node gui_pc.js",
+    "start:all": "node android_immune_server.js & sleep 2 && node gui_pc.js",
+    "demo": "node demo_participativa.js",
+    "audit": "node run_with_audit.js",
+    "test:inference": "node inference_test.js",
+    "test:keys": "node gen_keys_nacl.js",
+    "clean": "rm -f immune_memory.json immune_memory.json.tmp node_priv.key node_pub.key node_priv.pem node_pub.der node_priv.der"
+  },
   "dependencies": {
     "@qvac/sdk": "^0.12.2",
+    "axios": "^1.17.0",
+    "express": "^5.2.1",
     "tweetnacl": "^1.0.3",
     "ws": "^8.21.0"
   }

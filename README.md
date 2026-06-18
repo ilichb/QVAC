@@ -604,6 +604,44 @@ See [API.md](API.md).
 
 ---
 
+## 📊 Audit Log
+
+To generate a **structured audit log** of a demo run with performance metrics:
+
+```bash
+node run_with_audit.js
+```
+
+This creates `audit_log.json` containing:
+- **Run ID** and **timestamp** for each execution
+- **Total duration** (ms)
+- **Model load time** (ms)
+- **Inference duration** (ms)
+- **Model unload time** (ms)
+- **Exit code**
+- **Full terminal output** (model loading, inference, signing, propagation)
+
+The log is **appended** on each run (up to 50 entries, FIFO rotation) and written **atomically** to prevent corruption.
+
+### Example output
+
+```bash
+$ node run_with_audit.js
+...
+📊 AUDIT LOG SUMMARY
+   Run ID:           1
+   Timestamp:        2026-06-18T10:30:00.000Z
+   Total duration:   8450 ms (8.5 s)
+   Model load:       2500 ms
+   Inference:        6400 ms
+   Model unload:     100 ms
+   Exit code:        0
+   Log file:         /home/user/QVAC/audit_log.json
+   Total runs:       1
+```
+
+---
+
 ## 🧪 Tests & Verification
 
 ### Verify the system works
