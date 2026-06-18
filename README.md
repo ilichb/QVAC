@@ -334,6 +334,8 @@ node android_gui_server.js
 
 > **⚠️ IMPORTANT:** `localhost` does NOT work on Android browsers (Chrome/Firefox resolve it as IPv6 `::1`, causing an infinite loading loop).
 >
+> **⚠️ Disclaimer:** The touch GUI (`android_gui_server.js`) is functional on-device; full repo sync is pending. The core P2P/Ed25519 flow is demonstrated via Termux CLI in the video.
+
 > **Use your Android's WiFi IP address instead:**
 >
 > 1. Get your Android's IP address:
